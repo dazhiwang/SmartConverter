@@ -48,9 +48,10 @@ function print_words(wordArr) {
 	}
 }
 
-// test for chrome storage API
-var settings_dict = {"length":"m", "weight":"kg", "volume":"mL"};
-chrome.storage.sync.set(settings_dict);
+// test for localStorage API
+localStorage.setItem("length", "m");
+localStorage.setItem("weight", "kg");
+localStorage.setItem("volume", "mL");
 
 // When browser action button is clicked, add listener
 chrome.tabs.onUpdated.addListener(function(id, info, tab) {
@@ -83,8 +84,12 @@ chrome.runtime.onMessage.addListener(
 
 		console.log("Printing wordArr")
 
-		//get settings information from chrome.storage
-		var settings = {"length": "m", "weight":"kg", "volume":"mL"}
+		//get settings information from localStorage API
+		var settings = {"length": "", "weight":"", "volume":""};
+    	settings["length"] = localStorage.getItem("length");
+    	settings["weight"] = localStorage.getItem("weight");
+    	settings["volume"] = localStorage.getItem("volume");
+    	console.log(settings);
 
 		var converted_dict = {};
 
