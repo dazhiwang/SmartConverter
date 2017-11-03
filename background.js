@@ -115,8 +115,8 @@ chrome.runtime.onMessage.addListener(
 							else {
 								target_unit = "mm";
 							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toString();
-							converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+							converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 						}
 					}
 					else if (settings["length"] == "imperial"){ // convert to imperial
@@ -136,17 +136,17 @@ chrome.runtime.onMessage.addListener(
 							else {
 								target_unit = "in.";
 							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toString();
-							converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+							converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 						}
 					}
 					else { // convert to specified unit
 						
 						var target_unit = settings["length"];
 						console.log("The target unit is: " + target_unit)
-						var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toString();
+						var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
 						console.log("The converted val is: " + converted_val)
-						converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+						converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 					}
 				}
 				else if (weight_metric_units[word] || weight_imperial_units[word]) { // check if it's weight unit
@@ -163,8 +163,8 @@ chrome.runtime.onMessage.addListener(
 							else {
 								target_unit = "g";
 							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toString();
-							converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+							converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 						}
 					}
 					else if (settings["weight"] == "imperial") {
@@ -178,16 +178,16 @@ chrome.runtime.onMessage.addListener(
 							else {
 								target_unit = "oz.";
 							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toString();
-							converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+							converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 						}
 					}
 					else {
 						var target_unit = settings["weight"];
-						var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toString();
+						var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
 						console.log("The previous word is: " + wordArr[x-1])
 						console.log("The target unit is " + target_unit + " and the converted value is " + converted_val)
-						converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+						converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 					}
 				}
 				else if (volume_metric_units[word] || volume_imperial_units[word]) { // check if it's volume unit
@@ -202,8 +202,8 @@ chrome.runtime.onMessage.addListener(
 							else {
 								target_unit = "mL";
 							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toString();
-							converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+							converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 						}
 					}
 					else if (settings["volume"] == "imperial") {
@@ -217,14 +217,14 @@ chrome.runtime.onMessage.addListener(
 							else {
 								target_unit = "pt.";
 							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toString();
-							converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+							converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 						}
 					}
 					else {
 						var target_unit = settings["volume"];
-						var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toString();
-						converted_dict[wordArr[x-1]+" "+word] = target_unit+" "+converted_val;
+						var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+						converted_dict[wordArr[x-1]+" "+word] = converted_val+" "+target_unit;
 					}
 				}
 			}
