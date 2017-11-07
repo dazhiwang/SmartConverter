@@ -2,41 +2,41 @@ console.log("Content script")
 var conversions_dict = {}
 
 
-// function convert_units(node, key) {
-//     // Get all child nodes of current node in array
-//     console.log("Current node being checked is: " + node.nodeType)
-//     console.log("Length of childnodes is: " + node.childNodes.length)
+function convert_units(node, key) {
+    // Get all child nodes of current node in array
+    console.log("Current node being checked is: " + node.nodeType)
+    console.log("Length of childnodes is: " + node.childNodes.length)
 
-//     if(node.childNodes.length == 0) { return; }
+    if(node.childNodes.length == 0) { return; }
 
-//     // Loop through all child nodes
-//     for(x = 0; x < node.childNodes.length; ++x){
-//         // If text node, check to see if contains key
-//         if(node.nodeType == 3) {
-//             console.log("Node type is text")
-//             if(node.textContent.search(key) != -1) {
-//                 node.nodeValue = node.nodeValue.replace(key, conversions_dict[key])
-//                 console.log("A change was made")
-//                 return;
-//             } 
-//         } else if(node.nodeType == 1) {
-//                 //console.log("Node is an element")
-//                 // If element, go through child nodes
-//                 //console.log("Number of childs nodes for " + node.nodeName + " is " + node.childNodes.length)
+    // Loop through all child nodes
+    for(x = 0; x < node.childNodes.length; ++x){
+        // If text node, check to see if contains key
+        if(node.nodeType == 3) {
+            console.log("Node type is text")
+            if(node.textContent.search(key) != -1) {
+                node.nodeValue = node.nodeValue.replace(key, conversions_dict[key])
+                console.log("A change was made")
+                return;
+            } 
+        } else if(node.nodeType == 1) {
+                //console.log("Node is an element")
+                // If element, go through child nodes
+                //console.log("Number of childs nodes for " + node.nodeName + " is " + node.childNodes.length)
 
-//                 var child = node.childNodes[x]
-//                 convert_units(child, key)
+                var child = node.childNodes[x]
+                convert_units(child, key)
                 
                 
 
-//                 // node.childNodes.forEach(function() {
-//                 //     console.log("CALLING CHILD NODES FOR node THIS: ")
-//                 //     console.dir(this)
-//                 //     convert_units(this, key)
-//                 // });
-//         } 
-//     }
-// }
+                // node.childNodes.forEach(function() {
+                //     console.log("CALLING CHILD NODES FOR node THIS: ")
+                //     console.dir(this)
+                //     convert_units(this, key)
+                // });
+        } 
+    }
+}
 
 // function convert_stuff(text_nodes, key) {
   
