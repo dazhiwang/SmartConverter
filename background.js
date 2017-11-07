@@ -93,11 +93,77 @@ chrome.runtime.onMessage.addListener(
 
 		var converted_dict = {};
 
+		var inch_abbr = /\d+\"/;
+		var foot_abbr = /\d+\'/;
+
 		// Loop through words to find units
 		for(x = 0; x < wordArr.length; ++x) {
 			word = wordArr[x]
 			// Check if current word is in dictionary of units
-			if(word in units_dictionary) {
+			if (word.match(inch_abbr)) {
+				value = word.substring(0, word.length-1);
+				the_unit = "inches";
+				console.log("inches!!!!!");
+				if (settings["length"] == "metric") {
+					var target_unit = "";
+					var converted_val = "";
+					var tmp_val = parseFloat(value)*units_dictionary[the_unit];
+					if (tmp_val >= 500) {
+						target_unit = "km";
+					}
+					else if (tmp_val >= 0.5 && tmp_val < 500) {
+						target_unit = "m";
+					}
+					else if (tmp_val >= 0.005 && tmp_val < 0.5) {
+						target_unit = "cm";
+					}
+					else {
+						target_unit = "mm";
+					}
+
+					converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+					converted_dict[word] = converted_val+" "+target_unit;
+				}
+				else {
+					var target_unit = settings["length"];
+					console.log("The target unit: " + target_unit);
+					var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
+					console.log("The converted val: " + converted_val);
+					converted_dict[word] = converted_val+" "+target_unit;
+				}
+			}
+			else if (word.match(foot_abbr)) {
+				value = word.substring(0, word.length-1);
+				the_unit = "feet";
+				if (settings["length"] == "metric") {
+					var target_unit = "";
+					var converted_val = "";
+					var tmp_val = parseFloat(value)*units_dictionary[the_unit];
+					if (tmp_val >= 500) {
+						target_unit = "km";
+					}
+					else if (tmp_val >= 0.5 && tmp_val < 500) {
+						target_unit = "m";
+					}
+					else if (tmp_val >= 0.005 && tmp_val < 0.5) {
+						target_unit = "cm";
+					}
+					else {
+						target_unit = "mm";
+					}
+
+					converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+					converted_dict[word] = converted_val+" "+target_unit;
+				}
+				else {
+					var target_unit = settings["length"];
+					console.log("The target unit is: " + target_unit);
+					var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
+					console.log("The converted val is: " + converted_val);
+					converted_dict[word] = converted_val+" "+target_unit;
+				}
+			}
+			else if(word in units_dictionary) {
 				
 				
 				console.log("The word " + word + " is a unit")
