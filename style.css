@@ -1,0 +1,17 @@
+.text-primary {
+	font-size: 50px;
+}
+
+.nav {
+	font-size: 20px;
+	color: #428bca;
+	font-weight: bold;
+}
+
+.active {
+	font-weight: bold;	
+}
+
+a, a:visited {
+	color: inherit;
+}
