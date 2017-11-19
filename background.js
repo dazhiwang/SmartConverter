@@ -93,8 +93,11 @@ chrome.runtime.onMessage.addListener(
 
 		var converted_dict = {};
 
-		var inch_abbr = /\d+\"/;
-		var foot_abbr = /\d+\'/;
+		var inch_abbr = /^[0-9]\d+"/
+		var foot_abbr = /^[0-9]\d+'/
+
+		// var inch_abbr = /\d+\"/;
+		// var foot_abbr = /\d+\'/;
 
 		// Loop through words to find units
 		for(x = 0; x < wordArr.length; ++x) {

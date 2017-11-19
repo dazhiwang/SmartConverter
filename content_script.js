@@ -2,41 +2,41 @@ console.log("Content script")
 var conversions_dict = {}
 
 
-function convert_units(node, key) {
-    // Get all child nodes of current node in array
-    console.log("Current node being checked is: " + node.nodeType)
-    console.log("Length of childnodes is: " + node.childNodes.length)
+// function convert_units(node, key) {
+//     // Get all child nodes of current node in array
+//     console.log("Current node being checked is: " + node.nodeType)
+//     console.log("Length of childnodes is: " + node.childNodes.length)
 
-    if(node.childNodes.length == 0) { return; }
+//     if(node.childNodes.length == 0) { return; }
 
-    // Loop through all child nodes
-    for(x = 0; x < node.childNodes.length; ++x){
-        // If text node, check to see if contains key
-        if(node.nodeType == 3) {
-            console.log("Node type is text")
-            if(node.textContent.search(key) != -1) {
-                node.nodeValue = node.nodeValue.replace(key, conversions_dict[key])
-                console.log("A change was made")
-                return;
-            } 
-        } else if(node.nodeType == 1) {
-                //console.log("Node is an element")
-                // If element, go through child nodes
-                //console.log("Number of childs nodes for " + node.nodeName + " is " + node.childNodes.length)
+//     // Loop through all child nodes
+//     for(x = 0; x < node.childNodes.length; ++x){
+//         // If text node, check to see if contains key
+//         if(node.nodeType == 3) {
+//             console.log("Node type is text")
+//             if(node.textContent.search(key) != -1) {
+//                 node.nodeValue = node.nodeValue.replace(key, conversions_dict[key])
+//                 console.log("A change was made")
+//                 return;
+//             } 
+//         } else if(node.nodeType == 1) {
+//                 //console.log("Node is an element")
+//                 // If element, go through child nodes
+//                 //console.log("Number of childs nodes for " + node.nodeName + " is " + node.childNodes.length)
 
-                var child = node.childNodes[x]
-                convert_units(child, key)
+//                 var child = node.childNodes[x]
+//                 convert_units(child, key)
                 
                 
 
-                // node.childNodes.forEach(function() {
-                //     console.log("CALLING CHILD NODES FOR node THIS: ")
-                //     console.dir(this)
-                //     convert_units(this, key)
-                // });
-        } 
-    }
-}
+//                 // node.childNodes.forEach(function() {
+//                 //     console.log("CALLING CHILD NODES FOR node THIS: ")
+//                 //     console.dir(this)
+//                 //     convert_units(this, key)
+//                 // });
+//         } 
+//     }
+// }
 
 // function convert_stuff(text_nodes, key) {
   
@@ -90,23 +90,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             // For every key, do the conversion
 			for(var key in conversions_dict) {
 				if(conversions_dict.hasOwnProperty(key)) {
-
-				    // var k = new RegExp("/" + key + "/g")
-                    var position = document.documentElement.innerHTML.indexOf(key)
-
+ 
                     console.log("Printing position")
-                    console.dir(position)
 				    document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key])
+
                     var spanClass = "highlight"
                     var replaceWith = "<mark> " + conversions_dict[key] + "</mark>"
                     document.body.innerHTML = document.body.innerHTML.replace(conversions_dict[key],replaceWith)
 
-                    console.log("Document id")
-                    console.dir(document.getElementsByClassName('a-size-base'))
-
                     // Call recursive function
-                    console.log("Calling convert_units on " + key)
-                    //$('div:contains("test")').css('background-color', 'red');
+                    console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key])
+                    console.log(key)
 
                     //convert_stuff(text_nodes, key)
 
