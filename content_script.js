@@ -1,7 +1,6 @@
 console.log("Content script")
 var conversions_dict = {}
 
-
 // function convert_units(node, key) {
 //     // Get all child nodes of current node in array
 //     console.log("Current node being checked is: " + node.nodeType)
@@ -78,7 +77,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // Confirm message and execute callback function
     if(message.text == "match_found") {
         console.log("Sending DOM content")
-        console.dir(document.body.innerText);
 
         chrome.runtime.sendMessage({text: document.body.innerText}, 
         // Callback function should take array of dicts that need to be converted
@@ -86,21 +84,27 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             // Get all text nodes
             //var text_nodes = get_text_nodes()
 			conversions_dict = dict["dict"]
+            console.log("Printing conversions dictionary")
+            console.dir(conversions_dict)
 
             // For every key, do the conversion
 			for(var key in conversions_dict) {
 				if(conversions_dict.hasOwnProperty(key)) {
+
+                    // Loop through array
+                    for(var val in conversions_dict[key]) {
+
+                        document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
+
+                        var spanClass = "highlight"
+                        var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
+                        document.body.innerHTML = document.body.innerHTML.replace(conversions_dict[key][val],replaceWith)
+
+                        // Call recursive function
+                        console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
+                    }
  
-                    console.log("Printing position")
-				    document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key])
-
-                    var spanClass = "highlight"
-                    var replaceWith = "<mark> " + conversions_dict[key] + "</mark>"
-                    document.body.innerHTML = document.body.innerHTML.replace(conversions_dict[key],replaceWith)
-
-                    // Call recursive function
-                    console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key])
-                    console.log(key)
+                    
 
                     //convert_stuff(text_nodes, key)
 
