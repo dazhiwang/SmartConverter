@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="update_settings.js"></script>
   <link href="style.css" rel="stylesheet">
 </head>
 
@@ -34,35 +35,25 @@
     <center>
         <div class="col-sm-6">
             <div class="btn-group-vertical">
-                <input type="button" class="btn btn-primary" style="font-size: 20px;" value="   Metric   ">
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; width: 150px; color: #428bca" onclick="update_setting(this)" value="   Kilometer   ">
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" onclick="update_setting(this)" value="   Meter   ">
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca"
-                onclick="update_setting(this)" value="   Centimeter   ">
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" onclick="update_setting(this)" value="   Millimeter   ">
+                <input type="button" class="btn btn-primary" style="font-size: 20px;" value="   Metric   " id= "Metric_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; width: 150px; color: #428bca" value="   Kilometer   " id= "Kilometer_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Meter   " id= "Meter_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Centimeter   " id= "Centimeter_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Millimeter   " id= "Millimeter_setting">
             </div>
         </div>
         <br>
         <div class="col-sm-6">
             <div class="btn-group-vertical">
                 <p id="demo"> </p>
-                <input type="button" class="btn btn-primary" style="font-size: 20px; width: 150px" value="Imperial">
-                <button style="font-size: 20px; width: 150px" onclick="update_setting(this)">HELLO</button>
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" onclick="update_setting(this)" value="   Mile   ">
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" onclick="update_setting(this)" value="   Yard   ">
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" onclick="update_setting(this)" value="   Foot   ">
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" onclick="update_setting(this)" value="   Inch   ">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; width: 150px" value="Imperial" id= "Imperial_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Mile   " id= "Mile_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Yard   " id="Yard_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Foot   " id="Foot_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Inch   " id="Inch_setting">
             </div>
         </div>
     </center>
-
-    <script>
-        function update_setting(elem) {
-            document.getElementById("demo").innerHTML = "Hello World"
-            alert("Hello World!")
-            //console.log("THE ELEMENT ID IS: " + elem.id)
-        }
-    </script>
 </div>
 
 
