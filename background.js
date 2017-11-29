@@ -49,9 +49,10 @@ function print_words(wordArr) {
 }
 
 // test for localStorage API
-localStorage.setItem("length", "m");
+//localStorage.setItem("length", "m");
 localStorage.setItem("weight", "kg");
 localStorage.setItem("volume", "mL");
+console.log(localStorage.getItem("length"));
 
 // When browser action button is clicked, add listener
 chrome.tabs.onUpdated.addListener(function(id, info, tab) {
@@ -132,7 +133,7 @@ chrome.runtime.onMessage.addListener(
 
 					// If word doesn't exist, add new array for this word
 					if (!(word in converted_dict)) {
-						converted[word] = []
+						converted_dict[word] = []
 					}
 					converted_dict[word].push(converted_val+" "+target_unit);
 				}
@@ -142,7 +143,7 @@ chrome.runtime.onMessage.addListener(
 					var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
 					console.log("The converted val: " + converted_val);
 					if (!(word in converted_dict)) {
-						converted[word] = []
+						converted_dict[word] = []
 					}
 					converted_dict[word].push(converted_val+" "+target_unit);
 				}
@@ -169,7 +170,7 @@ chrome.runtime.onMessage.addListener(
 
 					converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
 					if (!(word in converted_dict)) {
-						converted[word] = []
+						converted_dict[word] = []
 					}
 					converted_dict[word].push(converted_val+" "+target_unit);
 				}
@@ -179,7 +180,7 @@ chrome.runtime.onMessage.addListener(
 					var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
 					console.log("The converted val is: " + converted_val);
 					if (!(word in converted_dict)) {
-						converted[word] = []
+						converted_dict[word] = []
 					}
 					converted_dict[word].push(converted_val+" "+target_unit);
 				}
@@ -214,7 +215,7 @@ chrome.runtime.onMessage.addListener(
 								converted_val3 = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
 								var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
 								if (!(temp_word in converted_dict)) {
-									converted[temp_word] = []
+									converted_dict[temp_word] = []
 								}	
 								converted_dict[temp_word].push(converted_val1+" x "+converted_val2+" x "+converted_val3+" "+target_unit);
 							}
@@ -223,7 +224,7 @@ chrome.runtime.onMessage.addListener(
 
 								var temp_word = wordArr[x-1]+" "+word
 								if (!(temp_word in converted_dict)) {
-									converted[temp_word] = []
+									converted_dict[temp_word] = []
 								}
 								converted_dict[temp_word].push(converted_val+" "+target_unit);
 							}
@@ -254,7 +255,7 @@ chrome.runtime.onMessage.addListener(
 
 								var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
 								if (!(temp_word in converted_dict)) {
-									converted[temp_word] = []
+									converted_dict[temp_word] = []
 								}
 								converted_dict[temp_word].push(converted_val1+" x "+converted_val2+" x "+converted_val3+" "+target_unit);
 							}
@@ -262,7 +263,7 @@ chrome.runtime.onMessage.addListener(
 								converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
 								var temp_word = wordArr[x-1]+" "+word
 								if (!(temp_word in converted_dict)) {
-									converted[temp_word] = []
+									converted_dict[temp_word] = []
 								}
 								converted_dict[temp_word].push(converted_val+" "+target_unit);
 							}
