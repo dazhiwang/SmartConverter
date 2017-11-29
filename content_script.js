@@ -85,9 +85,9 @@ function contains(selector, text) {
 function highlight(text) {
 
     // Get element for text
-    var arr = contains('body', 'Bose')
+    var arr = contains('body', text)
     var el = arr[0]
-
+    console.dir(el)
     var src_str = $(el).html();
     var term = text.replace(/(\s+)/,"(<[^>]+>)*$1(<[^>]+>)*");
     var pattern = new RegExp("("+term+")", "gi");
@@ -132,7 +132,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
                         document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
 
-                
+                        console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
                     // Highlight all instances
                     highlight(conversions_dict[key][val])
 
@@ -142,7 +142,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                         //document.body.innerHTML = document.body.innerHTML.replace(conversions_dict[key][val],replaceWith)
 
                         // Call recursive function
-                        console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
+                        //console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
                     }
  
                     
