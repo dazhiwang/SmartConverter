@@ -1,6 +1,12 @@
 console.log("Content script")
 var conversions_dict = {}
 
+
+// var script = document.createElement('script');
+// script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
+// script.type = 'text/javascript';
+// document.getElementsByTagName('head')[0].appendChild(script);
+
 // function convert_units(node, key) {
 //     // Get all child nodes of current node in array
 //     console.log("Current node being checked is: " + node.nodeType)
@@ -69,10 +75,34 @@ var conversions_dict = {}
 //     }
 //     return text_nodes;
 // }
+function contains(selector, text) {
+  var elements = document.querySelectorAll(selector);
+  return Array.prototype.filter.call(elements, function(element){
+    return RegExp(text).test(element.textContent);
+  });
+}
+
+function highlight(text) {
+
+    // Get element for text
+    var arr = contains('body', 'Bose')
+    var el = arr[0]
+
+    var src_str = $(el).html();
+    var term = text.replace(/(\s+)/,"(<[^>]+>)*$1(<[^>]+>)*");
+    var pattern = new RegExp("("+term+")", "gi");
+    //console.dir(src_str)
+
+    src_str = src_str.replace(pattern, "<mark>$1</mark>");
+    src_str = src_str.replace(/(<mark>[^<>]*)((<[^>]+>)+)([^<>]*<\/mark>)/,"$1</mark>$2<mark>$4");
+
+    $(el).html(src_str);
+}
 
 // Add listener 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     console.log("Content script received message")
+
 
     // Confirm message and execute callback function
     if(message.text == "match_found") {
@@ -84,9 +114,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             // Get all text nodes
             //var text_nodes = get_text_nodes()
 			conversions_dict = dict["dict"]
-            console.log("Printing conversions dictionary")
-            console.dir(conversions_dict)
 
+
+            // // Test highlighting
+            // $('span').highlight('Bose');
+            // console.log("THE ELEMENT FOR BOSE IS: ")
+
+            // var c = $(arr[0]+":contains('0.20 kg')").attr("class");
+            // console.log("The class is: ")
+            // console.dir(c)
             // For every key, do the conversion
 			for(var key in conversions_dict) {
 				if(conversions_dict.hasOwnProperty(key)) {
@@ -96,9 +132,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
                         document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
 
+                
+                    // Highlight all instances
+                    highlight(conversions_dict[key][val])
+
+                    // Try to get element
                         var spanClass = "highlight"
                         var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
-                        document.body.innerHTML = document.body.innerHTML.replace(conversions_dict[key][val],replaceWith)
+                        //document.body.innerHTML = document.body.innerHTML.replace(conversions_dict[key][val],replaceWith)
 
                         // Call recursive function
                         console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
@@ -118,11 +159,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     }
 });
 
-function highlight(container,what,spanClass) {
-    console.log("Content content")
-    console.dir(container.innerHTML)
-    var content = container.innerHTML
-    var replaceWith = '$1<span ' + ( spanClass ? 'class="' + spanClass + '"' : '' ) + '">$2</span>$3'
-    return (container.innerHTML = highlighted) !== content;
-}
+// function highlight(container,what,spanClass) {
+//     console.log("Content content")
+//     console.dir(container.innerHTML)
+//     var content = container.innerHTML
+//     var replaceWith = '$1<span ' + ( spanClass ? 'class="' + spanClass + '"' : '' ) + '">$2</span>$3'
+//     return (container.innerHTML = highlighted) !== content;
+// }
 

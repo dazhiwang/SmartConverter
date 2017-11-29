@@ -27,8 +27,8 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "*://*.amazon.com/*"],
-	  "run_at": "document_end",
-      "js": ["content_script.js"]
+	  "run_at": "document_end", 
+      "js": ["content_script.js", "jquery-3.2.1.min.js", "highlight.js"]
     }
   ]
 }
