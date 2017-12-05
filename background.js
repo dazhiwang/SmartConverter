@@ -63,13 +63,24 @@ console.log(localStorage.getItem("length"));
 console.log(localStorage.getItem("weight"));
 console.log(localStorage.getItem("volume"));
 
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	console.log("SENDING RESPONSE: ")
+	console.dir(localStorage['highlight'])
+    sendResponse({"status": localStorage['highlight']});
+});
+
 // When browser action button is clicked, add listener
 chrome.tabs.onUpdated.addListener(function(id, info, tab) {
 	console.log("Tab was updated")
 	var active_tab_url = tab.url
 
+
 	// If page load is complete, tab is active, and current tab is amazon, send message to content script
 	if(info.status == "complete" && tab.active && active_tab_url.match(amazon_url)) {
+
+		console.log("LOCAL STORAGE: ") 
+		console.dir(localStorage.getItem("highlight"))
+
 
 		// Query tabs for current tab
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {

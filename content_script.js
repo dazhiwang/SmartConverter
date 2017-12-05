@@ -41,18 +41,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             // Get all text nodes
             //var text_nodes = get_text_nodes()
 			conversions_dict = dict["dict"]
-
-
-            // // Test highlighting
-            // $('span').highlight('Bose');
-            // console.log("THE ELEMENT FOR BOSE IS: ")
-
-            // var c = $(arr[0]+":contains('0.20 kg')").attr("class");
-            // console.log("The class is: ")
-            // console.dir(c)
             var highlighting_enabled = false
-            console.log(localStorage.getItem("highlight"))
-            highlighting_enabled = localStorage.getItem("highlight");
+            var bool_str = ""
+
+            // Send request for highlighting enabled
+            chrome.extension.sendRequest({method: "getHighlighting"}, function(response) {
+                console.log("RECEIVED LOCAL STORAGE")
+                console.dir(response.status)
+                highlighting_enabled = response.status
+            });
+
+            console.log("BOOL STRING")
+            console.dir(highlighting_enabled)
+            // Set highlighting enabled
+            //if(bool_str == "false") { highlighting_enabled = false } else {highlighting_enabled = true}
 
             // For every key, do the conversion
 			for(var key in conversions_dict) {
