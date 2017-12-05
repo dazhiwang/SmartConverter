@@ -48,14 +48,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             chrome.extension.sendRequest({method: "getHighlighting"}, function(response) {
                 console.log("RECEIVED LOCAL STORAGE")
                 console.dir(response.status)
-                bool_str = response.status
+                highlighting_enabled = response.status
             });
 
-            // Set highlighting enabled
-            if(bool_str == "false") { highlighting_enabled = false } else {highlighting_enabled = true}
-
-            console.log("LOCAL STORAGE: ")
+            console.log("BOOL STRING")
             console.dir(highlighting_enabled)
+            // Set highlighting enabled
+            //if(bool_str == "false") { highlighting_enabled = false } else {highlighting_enabled = true}
 
             // For every key, do the conversion
 			for(var key in conversions_dict) {
