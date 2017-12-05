@@ -113,8 +113,6 @@ chrome.runtime.onMessage.addListener(
 		// Loop through words to find units
 		for(x = 0; x < wordArr.length; ++x) {
 			word = wordArr[x]
-			// If previous word not a number, skip
-			if(x != 0 && isNaN(wordArr[x-1])) continue;
 
 			// Check if current word is in dictionary of units
 			if (word.match(inch_abbr)) {
@@ -159,6 +157,7 @@ chrome.runtime.onMessage.addListener(
 					}
 				}
 			}
+
 			else if (word.match(foot_abbr)) {
 				var value = word.substring(0, word.length-1);
 				var the_unit = "feet";
@@ -198,8 +197,11 @@ chrome.runtime.onMessage.addListener(
 					}
 				}
 			}
-			else if(word in units_dictionary) {
-				
+
+			// If previous word not a number, skip
+			if(x != 0 && isNaN(wordArr[x-1])) continue;
+			
+			if(word in units_dictionary) {
 				
 				console.log("The word " + word + " is a unit")
 				if (length_metric_units[word] || length_imperial_units[word]) { // check if it's length unit
