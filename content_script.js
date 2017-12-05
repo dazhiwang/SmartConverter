@@ -56,21 +56,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
                     // Loop through array
                     for(var val in conversions_dict[key]) {
+                        highlighting_enabled = true
 
-                        document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
-
-                        console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
-                    highlighting_enabled = true
                         if(highlighting_enabled) {
-                            highlight(conversions_dict[key][val])
+                            //highlight(conversions_dict[key][val])
 
-                            // // Try to get element
-                            // var spanClass = "highlight"
-                            // var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
-                            //window.find("Bose", false, false)
-
+                            var spanClass = "highlight"
+                            var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
+                            document.body.innerHTML = document.body.innerHTML.replace(key, replaceWith)
+                            console.log("The current key is: " + key)
                             //$('body').text().highlight('Bose');
                         }
+
+                        //document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
+
+                        console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
+                        
                     }
 				}
 			}
