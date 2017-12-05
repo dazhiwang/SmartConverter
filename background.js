@@ -98,7 +98,8 @@ chrome.runtime.onMessage.addListener(
 		var settings = {"length": "", "weight":"", "volume":""};
     	settings["length"] = localStorage.getItem("length");
     	settings["weight"] = localStorage.getItem("weight");
-    	settings["volume"] = localStorage.getItem("volume");
+		settings["volume"] = localStorage.getItem("volume");
+		console.log(localStorage.getItem("highlight"))
     	console.log("THISDHIASHDIDSAJBDSAJBJADSBHJDSAKBDSJKABDJKSABJKDBSAKJDSAJKBSAJKBDJSKAB")
     	console.dir(settings);
 
