@@ -10,6 +10,7 @@
     <script src="http://code.jquery.com/jquery-2.0.0.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="update_length_settings.js"></script>
+  <script src="update_highlight.js"></script>
   <link href="style.css" rel="stylesheet">
 </head>
 
@@ -17,11 +18,15 @@
 
 <body>
 
+
 <div class="container">
+    
     <h1 class="text-primary">
         <center>SmartConverter</center>
     </h1>  
-
+    <p class="text-right" style="font-size: 20px;color: #428bca"> Highlight
+            <input type="checkbox" checked data-toggle="toggle" id="Highlight">
+    </p>
     <br>
     <!-- Centered Pills -->
     <ul class="nav nav-tabs nav-justified">
@@ -32,13 +37,12 @@
     <br>
     <br>
     <br>
-    <br>
-  
+    
     <center>
         <div class="col-sm-6">
             <div class="btn-group-vertical">
                 <input type="button" class="btn btn-primary" style="font-size: 20px;" value="   Metric   " id= "Metric_setting">
-                <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; width: 150px; color: #428bca" value="   Kilometer   " id= "Kilometer_setting">
+                <input type="button" class="btn btn-primary" style="font-size: 20px; width: 150px; background: #ffffff; color: #428bca" value="   Kilometer   " id= "Kilometer_setting">
                 <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Meter   " id= "Meter_setting">
                 <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Centimeter   " id= "Centimeter_setting">
                 <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Millimeter   " id= "Millimeter_setting">
@@ -47,7 +51,6 @@
         <br>
         <div class="col-sm-6">
             <div class="btn-group-vertical">
-                <p id="demo"> </p>
                 <input type="button" class="btn btn-primary" style="font-size: 20px; width: 150px" value="Imperial" id= "Imperial_setting">
                 <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Mile   " id= "Mile_setting">
                 <input type="button" class="btn btn-primary" style="font-size: 20px; background: #ffffff; color: #428bca" value="   Yard   " id="Yard_setting">

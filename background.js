@@ -3,37 +3,47 @@ var amazon_url = /^https?:\/\/(?:[^./?#]+\.)?amazon\.com/;
 //Global dict variable to hold array of units
 var units_dictionary = {
 	// length (metric)
-	"kilometers":1000, "km":1000, "meters":1.0, "m":1.0, "centimeters":0.01, "cm":0.01, "millimeters":0.001, "mm":0.001, 
+	"kilometers":1000, "km":1000, "meters":1.0, "m":1.0, "centimeters":0.01, "cm":0.01, "millimeters":0.001, "mm":0.001,
+	"Kilometers":1000, "KM":1000, "Meters":1.0, "M":1.0, "Centimeters":0.01, "CM":0.01, "Millimeters":0.001, "MM":0.001,
 	// length (imperial)
 	"miles":1609.34, "mi":1609.34, "yards":0.9144, "yd":0.9144, "feet":0.3048, "ft":0.3048, "inches":0.0254, "in":0.0254,
+	"Miles":1609.34, "Mile":1609.34, "Yards":0.9144, "Yard":0.9144, "Feet":0.3048, "FT":0.3048, "Inches":0.0254, "Inch":0.0254,
 	// weight (metric)
 	"kilograms":1000, "kg":1000, "grams":1.0, "g":1.0,
+	"Kilograms":1000, "KG":1000, "Grams":1.0, "Gram":1.0,
 	// weight (imperial)
 	"pounds":453.592, "lb":453.592, "ounces":28.3495, "oz":28.3495,
+	"Pounds":453.592, "lbs":453.592, "Ounces":28.3495,
 	// volume (metric)
 	"liters":1000, "L":1000, "milliliters":1.0, "mL":1.0,
+	"Liters":1000, "Liter":1000, "Milliliters":1.0, "Milliliter":1.0,
 	// volume (imperial)
 	"gallons":3785.41, "gal":3785.41, "pints":473.176, "pt":473.176
 };
 
 var length_metric_units = {
-	"kilometers":true, "km":true, "meters":true, "m":true, "centimeters":true, "cm":true, "millimeters":true, "mm":true
+	"kilometers":true, "km":true, "meters":true, "m":true, "centimeters":true, "cm":true, "millimeters":true, "mm":true,
+	"Kilometers":true, "KM":true, "Meters":true, "M":true, "Centimeters":true, "CM":true, "Millimeters":true, "MM":true
 }
 
 var length_imperial_units = {
-	"miles":true, "mi":true, "yards":true, "yd":true, "feet":true, "ft":true, "inches":true, "in":true
+	"miles":true, "mi":true, "yards":true, "yd":true, "feet":true, "ft":true, "inches":true, "in":true,
+	"Miles":true, "Mile":true, "Yards":true, "Yard":true, "Feet":true, "FT":true, "Inches":true, "Inch":true
 }
 
 var weight_metric_units = {
-	"kilograms":true, "kg":true, "grams":true, "g":true
+	"kilograms":true, "kg":true, "grams":true, "g":true,
+	"Kilograms":true, "KG":true, "Grams":true, "Gram":true
 }
 
 var weight_imperial_units = {
-	"pounds":true, "lb":true, "ounces":true, "oz":true
+	"pounds":true, "lb":true, "ounces":true, "oz":true,
+	"Pounds":true, "lbs":true, "Ounces":true
 }
 
 var volume_metric_units = {
-	"liters":true, "L":true, "milliliters":true, "mL":true
+	"liters":true, "L":true, "milliliters":true, "mL":true,
+	"Liters":true, "Liter":true, "Milliliters":true, "Milliliter":true
 }
 
 var volume_imperial_units = {
@@ -149,8 +159,8 @@ chrome.runtime.onMessage.addListener(
 			}
 
 			else if (word.match(foot_abbr)) {
-				value = word.substring(0, word.length-1);
-				the_unit = "feet";
+				var value = word.substring(0, word.length-1);
+				var the_unit = "feet";
 				if (settings["length"] == "metric") {
 					var target_unit = "";
 					var converted_val = "";

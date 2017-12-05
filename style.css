@@ -17,3 +17,8 @@ a, a:visited {
 }
 
 .highlight { background-color: yellow }
+
+#b1, #b2 {
+	display: inline;
+}
+  
