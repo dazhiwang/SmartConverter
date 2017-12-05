@@ -49,14 +49,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             // var c = $(arr[0]+":contains('0.20 kg')").attr("class");
             // console.log("The class is: ")
             // console.dir(c)
+            var highlighting_enabled = false
+            highlighting_enabled = localStorage.getItem("highlight");
+
             // For every key, do the conversion
 			for(var key in conversions_dict) {
 				if(conversions_dict.hasOwnProperty(key)) {
-                    var highlighting_enabled = localStorage.getItem("highlight");
 
                     // Loop through array
                     for(var val in conversions_dict[key]) {
-                        highlighting_enabled = true
 
                         if(highlighting_enabled) {
                             //highlight(conversions_dict[key][val])
