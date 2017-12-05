@@ -94,22 +94,20 @@ chrome.runtime.onMessage.addListener(
 
 		var converted_dict = {};
 
-		var inch_abbr = /^[0-9]\d+"/
-		var foot_abbr = /^[0-9]\d+'/
+		//var inch_abbr = /^[0-9]\d+"/
+		//var foot_abbr = /^[0-9]\d+'/
 
-		// var inch_abbr = /\d+\"/;
-		// var foot_abbr = /\d+\'/;
+		var inch_abbr = /\d+\"/;
+		var foot_abbr = /\d+\'/;
 
 		// Loop through words to find units
 		for(x = 0; x < wordArr.length; ++x) {
 			word = wordArr[x]
-			// If previous word not a number, skip
-			if(x != 0 && isNaN(wordArr[x-1])) continue;
 
 			// Check if current word is in dictionary of units
 			if (word.match(inch_abbr)) {
-				value = word.substring(0, word.length-1);
-				the_unit = "inches";
+				var value = word.substring(0, word.length-1);
+				var the_unit = "inches";
 				console.log("inches!!!!!");
 				if (settings["length"] == "metric") {
 					var target_unit = "";
@@ -149,6 +147,7 @@ chrome.runtime.onMessage.addListener(
 					}
 				}
 			}
+
 			else if (word.match(foot_abbr)) {
 				value = word.substring(0, word.length-1);
 				the_unit = "feet";
@@ -188,8 +187,11 @@ chrome.runtime.onMessage.addListener(
 					}
 				}
 			}
-			else if(word in units_dictionary) {
-				
+
+			// If previous word not a number, skip
+			if(x != 0 && isNaN(wordArr[x-1])) continue;
+			
+			if(word in units_dictionary) {
 				
 				console.log("The word " + word + " is a unit")
 				if (length_metric_units[word] || length_imperial_units[word]) { // check if it's length unit
