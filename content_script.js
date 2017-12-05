@@ -49,7 +49,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             // var c = $(arr[0]+":contains('0.20 kg')").attr("class");
             // console.log("The class is: ")
             // console.dir(c)
-            var highlighting_enabled = false
+            var highlighting_enabled = true
             highlighting_enabled = localStorage.getItem("highlight");
 
             // For every key, do the conversion
