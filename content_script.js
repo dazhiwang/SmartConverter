@@ -126,6 +126,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             // For every key, do the conversion
 			for(var key in conversions_dict) {
 				if(conversions_dict.hasOwnProperty(key)) {
+                    var highlighting_enabled = localStorage.getItem("highlight");
 
                     // Loop through array
                     for(var val in conversions_dict[key]) {
@@ -133,23 +134,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                         document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
 
                         console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
-                    // Highlight all instances
-                    highlight(conversions_dict[key][val])
-
-                    // Try to get element
-                        var spanClass = "highlight"
-                        var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
-                        //document.body.innerHTML = document.body.innerHTML.replace(conversions_dict[key][val],replaceWith)
-
-                        // Call recursive function
-                        //console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
-                    }
- 
                     
+                        if(highlighting_enabled) {
+                            highlight(conversions_dict[key][val])
 
-                    //convert_stuff(text_nodes, key)
-
-
+                            // Try to get element
+                            var spanClass = "highlight"
+                            var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
+                        }
+                    }
 				}
 			}
 
@@ -158,12 +151,3 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         });
     }
 });
-
-// function highlight(container,what,spanClass) {
-//     console.log("Content content")
-//     console.dir(container.innerHTML)
-//     var content = container.innerHTML
-//     var replaceWith = '$1<span ' + ( spanClass ? 'class="' + spanClass + '"' : '' ) + '">$2</span>$3'
-//     return (container.innerHTML = highlighted) !== content;
-// }
-
