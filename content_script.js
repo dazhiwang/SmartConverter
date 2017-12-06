@@ -1,5 +1,6 @@
 console.log("Content script")
 var conversions_dict = {}
+var highlighting_enabled = false
 
 
 function contains(selector, text) {
@@ -26,6 +27,48 @@ function highlight(text) {
     $(el).html(src_str);
 }
 
+function wait(ms) {
+    var start = new Date().getTime();
+    var end = start;
+    while(end < start + ms) {
+        end = new Date().getTime();
+    }
+}
+
+function convert() {
+    console.log("BOOL STRING")
+            console.dir(highlighting_enabled)
+            // Set highlighting enabled
+            //if(bool_str == "false") { highlighting_enabled = false } else {highlighting_enabled = true}
+
+            // For every key, do the conversion
+            for(var key in conversions_dict) {
+                if(conversions_dict.hasOwnProperty(key)) {
+
+                    // Loop through array
+                    for(var val in conversions_dict[key]) {
+
+                        if(highlighting_enabled == true) {
+                        console.log("DSBAJBDSAHJBDJAKSB")
+                        console.dir(highlighting_enabled)
+                            var spanClass = "highlight"
+                            var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
+                            document.body.innerHTML = document.body.innerHTML.replace(key, replaceWith)
+                            console.log("The current key is: " + key)
+
+                        } else {
+                            document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
+                        }
+
+                        //document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
+
+                        console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
+                        
+                    }
+                }
+            }
+} 
+
 // Add listener 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     console.log("Content script received message")
@@ -41,48 +84,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             // Get all text nodes
             //var text_nodes = get_text_nodes()
 			conversions_dict = dict["dict"]
-            var highlighting_enabled = false
             var bool_str = ""
 
+
             // Send request for highlighting enabled
-            chrome.extension.sendRequest({method: "getHighlighting"}, function(response) {
+            chrome.runtime.sendMessage({method: "getHighlighting"}, function(response) {
                 console.log("RECEIVED LOCAL STORAGE")
                 console.dir(response.status)
                 highlighting_enabled = response.status
             });
 
+setTimeout(convert, 2000)
             console.log("BOOL STRING")
             console.dir(highlighting_enabled)
             // Set highlighting enabled
             //if(bool_str == "false") { highlighting_enabled = false } else {highlighting_enabled = true}
-
-            // For every key, do the conversion
-			for(var key in conversions_dict) {
-				if(conversions_dict.hasOwnProperty(key)) {
-
-                    // Loop through array
-                    for(var val in conversions_dict[key]) {
-
-                        if(highlighting_enabled) {
-
-                            var spanClass = "highlight"
-                            var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
-                            document.body.innerHTML = document.body.innerHTML.replace(key, replaceWith)
-                            console.log("The current key is: " + key)
-                        } else {
-                            document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
-                        }
-
-                        //document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
-
-                        console.log("Calling convert_units on " + key + " and converting to " + conversions_dict[key][val])
-                        
-                    }
-				}
-			}
-
-
-    
         });
     }
 });

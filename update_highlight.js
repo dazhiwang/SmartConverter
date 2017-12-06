@@ -4,15 +4,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function highlight_handler() {
-	console.dir(Highlight)
+
     if(Highlight.checked){
         localStorage.setItem("highlight", true);
-        console.log("HIGHLIGHTING ON")
-
+        document.getElementById('Highlight').checked=true
     }
     else{
-    	console.log("HIGHLIGHTING OFF")
         localStorage.setItem("highlight", false);
+        document.getElementById('Highlight').checked=false
+        
     }
 }
 

@@ -63,10 +63,12 @@ console.log(localStorage.getItem("length"));
 console.log(localStorage.getItem("weight"));
 console.log(localStorage.getItem("volume"));
 
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-	console.log("SENDING RESPONSE: ")
-	console.dir(localStorage['highlight'])
-    sendResponse({"status": localStorage['highlight']});
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if(request.method == "getHighlighting"){
+		console.log("SENDING RESPONSE: ")
+		console.dir(localStorage['highlight'])
+	    sendResponse({"status": localStorage['highlight']});
+	}
 });
 
 // When browser action button is clicked, add listener
@@ -109,7 +111,8 @@ chrome.runtime.onMessage.addListener(
 		var settings = {"length": "", "weight":"", "volume":""};
     	settings["length"] = localStorage.getItem("length");
     	settings["weight"] = localStorage.getItem("weight");
-    	settings["volume"] = localStorage.getItem("volume");
+		settings["volume"] = localStorage.getItem("volume");
+		console.log(localStorage.getItem("highlight"))
     	console.log("THISDHIASHDIDSAJBDSAJBJADSBHJDSAKBDSJKABDJKSABJKDBSAKJDSAJKBSAJKBDJSKAB")
     	console.dir(settings);
 
