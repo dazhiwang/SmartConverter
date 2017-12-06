@@ -1,6 +1,6 @@
 console.log("Content script")
 var conversions_dict = {}
-var highlighting_enabled = false
+var highlighting_enabled = "false"
 
 
 function contains(selector, text) {
@@ -47,8 +47,12 @@ function convert() {
 
                     // Loop through array
                     for(var val in conversions_dict[key]) {
-
-                        if(highlighting_enabled == true) {
+                        console.log("AAA")
+                        console.dir(highlighting_enabled)
+                        if (highlighting_enabled === "true") {
+                            console.log("AA")
+                        }
+                        if(highlighting_enabled === "true") {
                         console.log("DSBAJBDSAHJBDJAKSB")
                         console.dir(highlighting_enabled)
                             var spanClass = "highlight"
@@ -56,7 +60,9 @@ function convert() {
                             document.body.innerHTML = document.body.innerHTML.replace(key, replaceWith)
                             console.log("The current key is: " + key)
 
-                        } else {
+                        } 
+                        if(highlighting_enabled === "false"){
+                            console.log("A")
                             document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
                         }
 
