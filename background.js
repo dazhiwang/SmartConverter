@@ -97,228 +97,253 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab) {
 // Call process words when page_reader sends dom content
 chrome.runtime.onMessage.addListener(
 	function(message, sender, sendResponse) {
-		console.log("Received dom content")
-		console.dir(message)
+		if(message.hasOwnProperty('text')){
+			console.log("Received dom content")
+			console.dir(message)
 
-		var wordArr = [];
-		var text = message.text
+			var wordArr = [];
+			var text = message.text
 
-		wordArr = text.split(/\s+/);
+			wordArr = text.split(/\s+/);
 
-		console.log("Printing wordArr")
+			console.log("Printing wordArr")
 
-		//get settings information from localStorage API
-		var settings = {"length": "", "weight":"", "volume":""};
-    	settings["length"] = localStorage.getItem("length");
-    	settings["weight"] = localStorage.getItem("weight");
-		settings["volume"] = localStorage.getItem("volume");
-		console.log(localStorage.getItem("highlight"))
-    	console.log("THISDHIASHDIDSAJBDSAJBJADSBHJDSAKBDSJKABDJKSABJKDBSAKJDSAJKBSAJKBDJSKAB")
-    	console.dir(settings);
+			//get settings information from localStorage API
+			var settings = {"length": "", "weight":"", "volume":""};
+	    	settings["length"] = localStorage.getItem("length");
+	    	settings["weight"] = localStorage.getItem("weight");
+			settings["volume"] = localStorage.getItem("volume");
+			console.log(localStorage.getItem("highlight"))
+	    	console.log("THISDHIASHDIDSAJBDSAJBJADSBHJDSAKBDSJKABDJKSABJKDBSAKJDSAJKBSAJKBDJSKAB")
+	    	console.dir(settings);
 
-		var converted_dict = {};
+			var converted_dict = {};
 
-		//var inch_abbr = /^[0-9]\d+"/
-		//var foot_abbr = /^[0-9]\d+'/
+			//var inch_abbr = /^[0-9]\d+"/
+			//var foot_abbr = /^[0-9]\d+'/
 
-		var inch_abbr = /\d+\"/;
-		var foot_abbr = /\d+\'/;
+			var inch_abbr = /\d+\"/;
+			var foot_abbr = /\d+\'/;
 
-		// Loop through words to find units
-		for(x = 0; x < wordArr.length; ++x) {
-			word = wordArr[x]
+			// Loop through words to find units
+			for(x = 0; x < wordArr.length; ++x) {
+				word = wordArr[x]
 
-			// Check if current word is in dictionary of units
-			if (word.match(inch_abbr)) {
-				var value = word.substring(0, word.length-1);
-				var the_unit = "inches";
-				console.log("inches!!!!!");
-				if (settings["length"] == "metric") {
-					var target_unit = "";
-					var converted_val = "";
-					var tmp_val = parseFloat(value)*units_dictionary[the_unit];
-					if (tmp_val >= 500) {
-						target_unit = "km";
-					}
-					else if (tmp_val >= 0.5 && tmp_val < 500) {
-						target_unit = "m";
-					}
-					else if (tmp_val >= 0.005 && tmp_val < 0.5) {
-						target_unit = "cm";
-					}
-					else {
-						target_unit = "mm";
-					}
+				// Check if current word is in dictionary of units
+				if (word.match(inch_abbr)) {
+					var value = word.substring(0, word.length-1);
+					var the_unit = "inches";
+					console.log("inches!!!!!");
+					if (settings["length"] == "metric") {
+						var target_unit = "";
+						var converted_val = "";
+						var tmp_val = parseFloat(value)*units_dictionary[the_unit];
+						if (tmp_val >= 500) {
+							target_unit = "km";
+						}
+						else if (tmp_val >= 0.5 && tmp_val < 500) {
+							target_unit = "m";
+						}
+						else if (tmp_val >= 0.005 && tmp_val < 0.5) {
+							target_unit = "cm";
+						}
+						else {
+							target_unit = "mm";
+						}
 
-					converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+						converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
 
-					// If word doesn't exist, add new array for this word
-					if (!(word in converted_dict)) {
-						converted_dict[word] = []
-					}
-					converted_dict[word].push(converted_val+" "+target_unit);
-				}
-				else {
-					var target_unit = settings["length"];
-					console.log("The target unit: " + target_unit);
-					if (units_dictionary[target_unit] != units_dictionary[the_unit]) {
-						var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
-						console.log("The converted val: " + converted_val);
+						// If word doesn't exist, add new array for this word
 						if (!(word in converted_dict)) {
 							converted_dict[word] = []
 						}
 						converted_dict[word].push(converted_val+" "+target_unit);
 					}
-				}
-			}
-
-			else if (word.match(foot_abbr)) {
-				var value = word.substring(0, word.length-1);
-				var the_unit = "feet";
-				if (settings["length"] == "metric") {
-					var target_unit = "";
-					var converted_val = "";
-					var tmp_val = parseFloat(value)*units_dictionary[the_unit];
-					if (tmp_val >= 500) {
-						target_unit = "km";
-					}
-					else if (tmp_val >= 0.5 && tmp_val < 500) {
-						target_unit = "m";
-					}
-					else if (tmp_val >= 0.005 && tmp_val < 0.5) {
-						target_unit = "cm";
-					}
 					else {
-						target_unit = "mm";
+						var target_unit = settings["length"];
+						console.log("The target unit: " + target_unit);
+						if (units_dictionary[target_unit] != units_dictionary[the_unit]) {
+							var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
+							console.log("The converted val: " + converted_val);
+							if (!(word in converted_dict)) {
+								converted_dict[word] = []
+							}
+							converted_dict[word].push(converted_val+" "+target_unit);
+						}
 					}
-
-					converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-					if (!(word in converted_dict)) {
-						converted_dict[word] = []
-					}
-					converted_dict[word].push(converted_val+" "+target_unit);
 				}
-				else {
-					var target_unit = settings["length"];
-					console.log("The target unit is: " + target_unit);
-					if (units_dictionary[target_unit] != units_dictionary[the_unit]) {
-						var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
-						console.log("The converted val is: " + converted_val);
+
+				else if (word.match(foot_abbr)) {
+					var value = word.substring(0, word.length-1);
+					var the_unit = "feet";
+					if (settings["length"] == "metric") {
+						var target_unit = "";
+						var converted_val = "";
+						var tmp_val = parseFloat(value)*units_dictionary[the_unit];
+						if (tmp_val >= 500) {
+							target_unit = "km";
+						}
+						else if (tmp_val >= 0.5 && tmp_val < 500) {
+							target_unit = "m";
+						}
+						else if (tmp_val >= 0.005 && tmp_val < 0.5) {
+							target_unit = "cm";
+						}
+						else {
+							target_unit = "mm";
+						}
+
+						converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
 						if (!(word in converted_dict)) {
 							converted_dict[word] = []
 						}
 						converted_dict[word].push(converted_val+" "+target_unit);
 					}
-				}
-			}
-
-			// If previous word not a number, skip
-			if(x != 0 && isNaN(wordArr[x-1])) continue;
-			
-			if(word in units_dictionary) {
-				
-				console.log("The word " + word + " is a unit")
-				if (length_metric_units[word] || length_imperial_units[word]) { // check if it's length unit
-					console.log("This word is unit of length")
-					if (settings["length"] == "metric") { // convert to metric
-						if (length_imperial_units[word]) { // check if conversion needed
-							var target_unit = "";
-							var converted_val = "";
-							var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
-							if (tmp_val >= 500) {
-								target_unit = "km";
-							}
-							else if (tmp_val >= 0.5 && tmp_val < 500) {
-								target_unit = "m";
-							}
-							else if (tmp_val >= 0.005 && tmp_val < 0.5) {
-								target_unit = "cm";
-							}
-							else {
-								target_unit = "mm";
-							}
-
-							if (wordArr[x-2] == "x" && wordArr[x-4] == "x") {
-								converted_val1 = (parseFloat(wordArr[x-5])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								converted_val2 = (parseFloat(wordArr[x-3])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								converted_val3 = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-								var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
-								if (!(temp_word in converted_dict)) {
-									converted_dict[temp_word] = []
-								}	
-								converted_dict[temp_word].push(converted_val1+" x "+converted_val2+" x "+converted_val3+" "+target_unit);
-							}
-							else {
-								converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-
-								var temp_word = wordArr[x-1]+" "+word
-								if (!(temp_word in converted_dict)) {
-									converted_dict[temp_word] = []
-								}
-								converted_dict[temp_word].push(converted_val+" "+target_unit);
-							}
-						}
-					}
-					else if (settings["length"] == "imperial"){ // convert to imperial
-						if (length_metric_units[word]) { // check if conversion needed
-							var target_unit = "";
-							var converted_val = "";
-							var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
-							if (tmp_val >= 804.672) {
-								target_unit = "mi.";
-							}
-							else if (tmp_val >= 0.4572 && tmp_val < 804.672) {
-								target_unit = "yd.";
-							}
-							else if (tmp_val >= 0.1524 && tmp_val < 0.4572) {
-								target_unit = "ft.";
-							}
-							else {
-								target_unit = "in.";
-							}
-
-							if (wordArr[x-2] == "x" && wordArr[x-4] == "x") {
-								converted_val1 = (parseFloat(wordArr[x-5])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								converted_val2 = (parseFloat(wordArr[x-3])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								converted_val3 = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-
-								var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
-								if (!(temp_word in converted_dict)) {
-									converted_dict[temp_word] = []
-								}
-								converted_dict[temp_word].push(converted_val1+" x "+converted_val2+" x "+converted_val3+" "+target_unit);
-							}
-							else {
-								converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-								var temp_word = wordArr[x-1]+" "+word
-								if (!(temp_word in converted_dict)) {
-									converted_dict[temp_word] = []
-								}
-								converted_dict[temp_word].push(converted_val+" "+target_unit);
-							}
-						}
-					}
-					else { // convert to specified unit
-						
+					else {
 						var target_unit = settings["length"];
 						console.log("The target unit is: " + target_unit);
-						if (units_dictionary[target_unit] != units_dictionary[word]) {
-							if (wordArr[x-2] == "x" && wordArr[x-4] == "x") {
-								converted_val1 = (parseFloat(wordArr[x-5])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								console.log("The converted val is: " + converted_val1);
-								converted_val2 = (parseFloat(wordArr[x-3])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								console.log("The converted val is: " + converted_val2);
-								converted_val3 = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								console.log("The converted val is: " + converted_val3);
-								var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
-								if (!(temp_word in converted_dict)) {
+						if (units_dictionary[target_unit] != units_dictionary[the_unit]) {
+							var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
+							console.log("The converted val is: " + converted_val);
+							if (!(word in converted_dict)) {
+								converted_dict[word] = []
+							}
+							converted_dict[word].push(converted_val+" "+target_unit);
+						}
+					}
+				}
+
+				// If previous word not a number, skip
+				if(x != 0 && isNaN(wordArr[x-1])) continue;
+				
+				if(word in units_dictionary) {
+					
+					console.log("The word " + word + " is a unit")
+					if (length_metric_units[word] || length_imperial_units[word]) { // check if it's length unit
+						console.log("This word is unit of length")
+						if (settings["length"] == "metric") { // convert to metric
+							if (length_imperial_units[word]) { // check if conversion needed
+								var target_unit = "";
+								var converted_val = "";
+								var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
+								if (tmp_val >= 500) {
+									target_unit = "km";
+								}
+								else if (tmp_val >= 0.5 && tmp_val < 500) {
+									target_unit = "m";
+								}
+								else if (tmp_val >= 0.005 && tmp_val < 0.5) {
+									target_unit = "cm";
+								}
+								else {
+									target_unit = "mm";
+								}
+
+								if (wordArr[x-2] == "x" && wordArr[x-4] == "x") {
+									converted_val1 = (parseFloat(wordArr[x-5])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+									converted_val2 = (parseFloat(wordArr[x-3])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+									converted_val3 = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+									var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
+									if (!(temp_word in converted_dict)) {
+										converted_dict[temp_word] = []
+									}	
+									converted_dict[temp_word].push(converted_val1+" x "+converted_val2+" x "+converted_val3+" "+target_unit);
+								}
+								else {
+									converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+
+									var temp_word = wordArr[x-1]+" "+word
+									if (!(temp_word in converted_dict)) {
 										converted_dict[temp_word] = []
 									}
-								converted_dict[temp_word].push(converted_val1+" x "+converted_val2+" x "+converted_val3+" "+target_unit);
+									converted_dict[temp_word].push(converted_val+" "+target_unit);
+								}
 							}
-							else {
-								var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								console.log("The converted val is: " + converted_val);
+						}
+						else if (settings["length"] == "imperial"){ // convert to imperial
+							if (length_metric_units[word]) { // check if conversion needed
+								var target_unit = "";
+								var converted_val = "";
+								var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
+								if (tmp_val >= 804.672) {
+									target_unit = "mi.";
+								}
+								else if (tmp_val >= 0.4572 && tmp_val < 804.672) {
+									target_unit = "yd.";
+								}
+								else if (tmp_val >= 0.1524 && tmp_val < 0.4572) {
+									target_unit = "ft.";
+								}
+								else {
+									target_unit = "in.";
+								}
+
+								if (wordArr[x-2] == "x" && wordArr[x-4] == "x") {
+									converted_val1 = (parseFloat(wordArr[x-5])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+									converted_val2 = (parseFloat(wordArr[x-3])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+									converted_val3 = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+
+									var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
+									if (!(temp_word in converted_dict)) {
+										converted_dict[temp_word] = []
+									}
+									converted_dict[temp_word].push(converted_val1+" x "+converted_val2+" x "+converted_val3+" "+target_unit);
+								}
+								else {
+									converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+									var temp_word = wordArr[x-1]+" "+word
+									if (!(temp_word in converted_dict)) {
+										converted_dict[temp_word] = []
+									}
+									converted_dict[temp_word].push(converted_val+" "+target_unit);
+								}
+							}
+						}
+						else { // convert to specified unit
+							
+							var target_unit = settings["length"];
+							console.log("The target unit is: " + target_unit);
+							if (units_dictionary[target_unit] != units_dictionary[word]) {
+								if (wordArr[x-2] == "x" && wordArr[x-4] == "x") {
+									converted_val1 = (parseFloat(wordArr[x-5])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+									console.log("The converted val is: " + converted_val1);
+									converted_val2 = (parseFloat(wordArr[x-3])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+									console.log("The converted val is: " + converted_val2);
+									converted_val3 = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+									console.log("The converted val is: " + converted_val3);
+									var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
+									if (!(temp_word in converted_dict)) {
+											converted_dict[temp_word] = []
+										}
+									converted_dict[temp_word].push(converted_val1+" x "+converted_val2+" x "+converted_val3+" "+target_unit);
+								}
+								else {
+									var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+									console.log("The converted val is: " + converted_val);
+									var temp_word = wordArr[x-1]+" "+word
+									if (!(temp_word in converted_dict)) {
+											converted_dict[temp_word] = []
+										}
+									converted_dict[temp_word].push(converted_val+" "+target_unit);
+								}
+							}
+						}
+					}
+					else if (weight_metric_units[word] || weight_imperial_units[word]) { // check if it's weight unit
+
+						console.log("This word is unit of weight")
+						if (settings["weight"] == "metric") {
+							if (weight_imperial_units[word]) {
+								var target_unit = "";
+								var converted_val = "";
+								var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
+								if (tmp_val >= 500) {
+									target_unit = "kg";
+								}
+								else {
+									target_unit = "g";
+								}
+								converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
 								var temp_word = wordArr[x-1]+" "+word
 								if (!(temp_word in converted_dict)) {
 										converted_dict[temp_word] = []
@@ -326,129 +351,106 @@ chrome.runtime.onMessage.addListener(
 								converted_dict[temp_word].push(converted_val+" "+target_unit);
 							}
 						}
-					}
-				}
-				else if (weight_metric_units[word] || weight_imperial_units[word]) { // check if it's weight unit
-
-					console.log("This word is unit of weight")
-					if (settings["weight"] == "metric") {
-						if (weight_imperial_units[word]) {
-							var target_unit = "";
-							var converted_val = "";
-							var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
-							if (tmp_val >= 500) {
-								target_unit = "kg";
-							}
-							else {
-								target_unit = "g";
-							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-							var temp_word = wordArr[x-1]+" "+word
-							if (!(temp_word in converted_dict)) {
-									converted_dict[temp_word] = []
+						else if (settings["weight"] == "imperial") {
+							if (weight_metric_units[word]) {
+								var target_unit = "";
+								var converted_val = "";
+								var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
+								if (tmp_val >= 226.796) {
+									target_unit = "lb.";
 								}
-							converted_dict[temp_word].push(converted_val+" "+target_unit);
-						}
-					}
-					else if (settings["weight"] == "imperial") {
-						if (weight_metric_units[word]) {
-							var target_unit = "";
-							var converted_val = "";
-							var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
-							if (tmp_val >= 226.796) {
-								target_unit = "lb.";
-							}
-							else {
-								target_unit = "oz.";
-							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-							var temp_word = wordArr[x-1]+" "+word
-
-							if (!(temp_word in converted_dict)) {
-									converted_dict[temp_word] = []
+								else {
+									target_unit = "oz.";
 								}
-							converted_dict[temp_word].push(converted_val+" "+target_unit);
-						}
-					}
-					else {
-						var target_unit = settings["weight"];
-						if (units_dictionary[target_unit] != units_dictionary[word]) {
-							var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-							console.log("The previous word is: " + wordArr[x-1])
-							console.log("The target unit is " + target_unit + " and the converted value is " + converted_val)
-							var temp_word = wordArr[x-1]+" "+word
+								converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+								var temp_word = wordArr[x-1]+" "+word
 
-							if (!(temp_word in converted_dict)) {
+								if (!(temp_word in converted_dict)) {
 										converted_dict[temp_word] = []
 									}
-							converted_dict[temp_word].push(converted_val+" "+target_unit);
+								converted_dict[temp_word].push(converted_val+" "+target_unit);
+							}
 						}
-					}
-				}
-				else if (volume_metric_units[word] || volume_imperial_units[word]) { // check if it's volume unit
-					if (settings["volume"] == "metric") {
-						if (volume_imperial_units[word]) {
-							var target_unit = "";
-							var converted_val = "";
-							var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
-							if (tmp_val >= 500) {
-								target_unit = "L";
-							}
-							else {
-								target_unit = "mL";
-							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-							var temp_word = wordArr[x-1]+" "+word
+						else {
+							var target_unit = settings["weight"];
+							if (units_dictionary[target_unit] != units_dictionary[word]) {
+								var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+								console.log("The previous word is: " + wordArr[x-1])
+								console.log("The target unit is " + target_unit + " and the converted value is " + converted_val)
+								var temp_word = wordArr[x-1]+" "+word
 
-							if (!(temp_word in converted_dict)) {
-									converted_dict[temp_word] = []
-								}
-							converted_dict[temp_word].push(converted_val+" "+target_unit);
+								if (!(temp_word in converted_dict)) {
+											converted_dict[temp_word] = []
+										}
+								converted_dict[temp_word].push(converted_val+" "+target_unit);
+							}
 						}
 					}
-					else if (settings["volume"] == "imperial") {
-						if (volume_metric_units[word]) {
-							var target_unit = "";
-							var converted_val = "";
-							var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
-							if (tmp_val >= 1892.71) {
-								target_unit = "gal.";
-							}
-							else {
-								target_unit = "pt.";
-							}
-							converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
-							var temp_word = wordArr[x-1]+" "+word
+					else if (volume_metric_units[word] || volume_imperial_units[word]) { // check if it's volume unit
+						if (settings["volume"] == "metric") {
+							if (volume_imperial_units[word]) {
+								var target_unit = "";
+								var converted_val = "";
+								var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
+								if (tmp_val >= 500) {
+									target_unit = "L";
+								}
+								else {
+									target_unit = "mL";
+								}
+								converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+								var temp_word = wordArr[x-1]+" "+word
 
-							if (!(temp_word in converted_dict)) {
-									converted_dict[temp_word] = []
-								}
-							converted_dict[temp_word].push(converted_val+" "+target_unit);
-						}
-					}
-					else {
-						var temp_word = wordArr[x-1]+" "+word
-						var target_unit = settings["volume"];
-						if (units_dictionary[target_unit] != units_dictionary[word]) {
-							var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-							if (!(temp_word in converted_dict)) {
+								if (!(temp_word in converted_dict)) {
 										converted_dict[temp_word] = []
 									}
-							converted_dict[temp_word].push(converted_val+" "+target_unit);
+								converted_dict[temp_word].push(converted_val+" "+target_unit);
+							}
+						}
+						else if (settings["volume"] == "imperial") {
+							if (volume_metric_units[word]) {
+								var target_unit = "";
+								var converted_val = "";
+								var tmp_val = parseFloat(wordArr[x-1])*units_dictionary[word];
+								if (tmp_val >= 1892.71) {
+									target_unit = "gal.";
+								}
+								else {
+									target_unit = "pt.";
+								}
+								converted_val = (tmp_val/units_dictionary[target_unit]).toFixed(2).toString();
+								var temp_word = wordArr[x-1]+" "+word
+
+								if (!(temp_word in converted_dict)) {
+										converted_dict[temp_word] = []
+									}
+								converted_dict[temp_word].push(converted_val+" "+target_unit);
+							}
+						}
+						else {
+							var temp_word = wordArr[x-1]+" "+word
+							var target_unit = settings["volume"];
+							if (units_dictionary[target_unit] != units_dictionary[word]) {
+								var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
+								if (!(temp_word in converted_dict)) {
+											converted_dict[temp_word] = []
+										}
+								converted_dict[temp_word].push(converted_val+" "+target_unit);
+							}
 						}
 					}
 				}
 			}
+
+		    console.log("Process Complete")
+		    console.dir(wordArr)
+		    console.log("Converted dict")
+		    console.dir(converted_dict)	
+
+			// call sendResponse to send list of units to convert
+			sendResponse({dict: converted_dict})
+			return true;
 		}
-
-	    console.log("Process Complete")
-	    console.dir(wordArr)
-	    console.log("Converted dict")
-	    console.dir(converted_dict)	
-
-		// call sendResponse to send list of units to convert
-		sendResponse({dict: converted_dict})
-		return true;
 	}
 );
 
