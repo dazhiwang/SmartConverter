@@ -4,17 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function highlight_handler() {
+
     if(Highlight.checked){
-        console.log("Highlight checked")
-        localStorage.setItem("highlight", true);
-        console.log(localStorage.getItem("highlight"))
-        console.log(document.getElementById('Highlight').checked)
+        localStorage.setItem("highlight", "true");
         document.getElementById('Highlight').checked=true
     }
     else{
-        console.log("Highlight unchecked")
-        localStorage.setItem("highlight", false);
-        console.log(document.getElementById('Highlight').checked)
+        localStorage.setItem("highlight", "false");
         document.getElementById('Highlight').checked=false
         
     }
