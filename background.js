@@ -97,7 +97,6 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab) {
 // Call process words when page_reader sends dom content
 chrome.runtime.onMessage.addListener(
 	function(message, sender, sendResponse) {
-		if(message.hasOwnProperty('text')){
 			console.log("Received dom content")
 			console.dir(message)
 
@@ -450,7 +449,7 @@ chrome.runtime.onMessage.addListener(
 			// call sendResponse to send list of units to convert
 			sendResponse({dict: converted_dict})
 			return true;
-		}
+		
 	}
 );
 
