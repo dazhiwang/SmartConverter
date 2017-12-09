@@ -79,7 +79,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 highlighting_enabled = response.status
             });
 
-setTimeout(convert, 2000)
+setTimeout(convert, 1000)
             // Set highlighting enabled
             //if(bool_str == "false") { highlighting_enabled = false } else {highlighting_enabled = true}
         });
