@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Smart Converter",
-  "description": "This extension allows user to see units he is comfortable with automatically.",
+  "description": "This extension helps users automatically convert all unfamiliar units without the need to search them.",
   "version": "1.0",
 
   "browser_action": {
