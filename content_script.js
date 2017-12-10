@@ -2,21 +2,20 @@ var conversions_dict = {}
 var highlighting_enabled = "false"
 
 function convert() {
-
     // For every key, do the conversion
     for(var key in conversions_dict) {
         if(conversions_dict.hasOwnProperty(key)) {
 
             // Loop through array
             for(var val in conversions_dict[key]) {
-
                 if(highlighting_enabled === "true") {
-
+                    console.log("The key is " + key + " and converting to " + conversions_dict[key][val])
                     var spanClass = "highlight"
                     var replaceWith = "<mark> " + conversions_dict[key][val] + "</mark>"
                     document.body.innerHTML = document.body.innerHTML.replace(key, replaceWith)
+
                 } 
-                else if(highlighting_enabled === "false"){
+                if(highlighting_enabled === "false"){
                     document.body.innerHTML = document.body.innerHTML.replace(key, conversions_dict[key][val])
                 }
                 
@@ -36,16 +35,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         // Callback function should take array of dicts that need to be converted
         function(dict) {
             // Get all text nodes
-            //var text_nodes = get_text_nodes()
-			conversions_dict = dict["dict"]
+            conversions_dict = dict["dict"]
+            var bool_str = ""
+
 
             // Send request for highlighting enabled
             chrome.runtime.sendMessage({method: "getHighlighting"}, function(response) {
-                console.dir(response.status)
                 highlighting_enabled = response.status
             });
 
-            setTimeout(convert, 2000)
+            setTimeout(convert, 1000)
 
         });
     }

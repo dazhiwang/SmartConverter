@@ -1,4 +1,4 @@
-var amazon_url = /^https?:\/\/(?:[^./?#]+\.)?amazon\.com/;
+// var amazon_url = /^https?:\/\/(?:[^./?#]+\.)?amazon\.com/;
 
 //Global dict variable to hold array of units
 var units_dictionary = {
@@ -50,71 +50,43 @@ var volume_imperial_units = {
 	"gallons":true, "gal":true, "pints":true, "pt":true
 }
 
-function print_words(wordArr) {
-	
-	for(x = 0; x < wordArr.length; ++x) {
-		console.log(wordArr[x])
-		console.log('\n')
-	}
-}
-
-// test for localStorage API
-console.log(localStorage.getItem("length"));
-console.log(localStorage.getItem("weight"));
-console.log(localStorage.getItem("volume"));
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if(request.method == "getHighlighting"){
-		console.log("SENDING RESPONSE: ")
-		console.dir(localStorage['highlight'])
 	    sendResponse({"status": localStorage['highlight']});
 	}
 });
 
 // When browser action button is clicked, add listener
 chrome.tabs.onUpdated.addListener(function(id, info, tab) {
-	console.log("Tab was updated")
 	var active_tab_url = tab.url
 
 
 	// If page load is complete, tab is active, and current tab is amazon, send message to content script
-	if(info.status == "complete" && tab.active && active_tab_url.match(amazon_url)) {
-
-		console.log("LOCAL STORAGE: ") 
-		console.dir(localStorage.getItem("highlight"))
-
+	if(info.status == "complete" && tab.active) {
 
 		// Query tabs for current tab
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 			chrome.tabs.sendMessage(tabs[0].id, {text: "match_found"})
-			console.log("Message sent to content script with tab id: " + tabs[0].id)
 		});
-	} else {
-		console.log("Site is not amazon")
 	}
 })
 
 // Call process words when page_reader sends dom content
 chrome.runtime.onMessage.addListener(
 	function(message, sender, sendResponse) {
-			console.log("Received dom content")
-			console.dir(message)
-
+		if(message.hasOwnProperty('text')){ 
 			var wordArr = [];
+
 			var text = message.text
 
 			wordArr = text.split(/\s+/);
 
-			console.log("Printing wordArr")
 
 			//get settings information from localStorage API
 			var settings = {"length": "", "weight":"", "volume":""};
 	    	settings["length"] = localStorage.getItem("length");
 	    	settings["weight"] = localStorage.getItem("weight");
 			settings["volume"] = localStorage.getItem("volume");
-			console.log(localStorage.getItem("highlight"))
-	    	console.log("THISDHIASHDIDSAJBDSAJBJADSBHJDSAKBDSJKABDJKSABJKDBSAKJDSAJKBSAJKBDJSKAB")
-	    	console.dir(settings);
 
 			var converted_dict = {};
 
@@ -132,7 +104,6 @@ chrome.runtime.onMessage.addListener(
 				if (word.match(inch_abbr)) {
 					var value = word.substring(0, word.length-1);
 					var the_unit = "inches";
-					console.log("inches!!!!!");
 					if (settings["length"] == "metric") {
 						var target_unit = "";
 						var converted_val = "";
@@ -160,10 +131,8 @@ chrome.runtime.onMessage.addListener(
 					}
 					else {
 						var target_unit = settings["length"];
-						console.log("The target unit: " + target_unit);
 						if (units_dictionary[target_unit] != units_dictionary[the_unit]) {
 							var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
-							console.log("The converted val: " + converted_val);
 							if (!(word in converted_dict)) {
 								converted_dict[word] = []
 							}
@@ -200,10 +169,8 @@ chrome.runtime.onMessage.addListener(
 					}
 					else {
 						var target_unit = settings["length"];
-						console.log("The target unit is: " + target_unit);
 						if (units_dictionary[target_unit] != units_dictionary[the_unit]) {
 							var converted_val = (parseFloat(value)*units_dictionary[the_unit]/units_dictionary[target_unit]).toFixed(2).toString();
-							console.log("The converted val is: " + converted_val);
 							if (!(word in converted_dict)) {
 								converted_dict[word] = []
 							}
@@ -217,9 +184,7 @@ chrome.runtime.onMessage.addListener(
 				
 				if(word in units_dictionary) {
 					
-					console.log("The word " + word + " is a unit")
 					if (length_metric_units[word] || length_imperial_units[word]) { // check if it's length unit
-						console.log("This word is unit of length")
 						if (settings["length"] == "metric") { // convert to metric
 							if (length_imperial_units[word]) { // check if conversion needed
 								var target_unit = "";
@@ -301,15 +266,11 @@ chrome.runtime.onMessage.addListener(
 						else { // convert to specified unit
 							
 							var target_unit = settings["length"];
-							console.log("The target unit is: " + target_unit);
 							if (units_dictionary[target_unit] != units_dictionary[word]) {
 								if (wordArr[x-2] == "x" && wordArr[x-4] == "x") {
 									converted_val1 = (parseFloat(wordArr[x-5])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-									console.log("The converted val is: " + converted_val1);
 									converted_val2 = (parseFloat(wordArr[x-3])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-									console.log("The converted val is: " + converted_val2);
 									converted_val3 = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-									console.log("The converted val is: " + converted_val3);
 									var temp_word = wordArr[x-5]+" x "+wordArr[x-3]+" x "+wordArr[x-1]+" "+word
 									if (!(temp_word in converted_dict)) {
 											converted_dict[temp_word] = []
@@ -318,7 +279,6 @@ chrome.runtime.onMessage.addListener(
 								}
 								else {
 									var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-									console.log("The converted val is: " + converted_val);
 									var temp_word = wordArr[x-1]+" "+word
 									if (!(temp_word in converted_dict)) {
 											converted_dict[temp_word] = []
@@ -330,7 +290,6 @@ chrome.runtime.onMessage.addListener(
 					}
 					else if (weight_metric_units[word] || weight_imperial_units[word]) { // check if it's weight unit
 
-						console.log("This word is unit of weight")
 						if (settings["weight"] == "metric") {
 							if (weight_imperial_units[word]) {
 								var target_unit = "";
@@ -374,8 +333,6 @@ chrome.runtime.onMessage.addListener(
 							var target_unit = settings["weight"];
 							if (units_dictionary[target_unit] != units_dictionary[word]) {
 								var converted_val = (parseFloat(wordArr[x-1])*units_dictionary[word]/units_dictionary[target_unit]).toFixed(2).toString();
-								console.log("The previous word is: " + wordArr[x-1])
-								console.log("The target unit is " + target_unit + " and the converted value is " + converted_val)
 								var temp_word = wordArr[x-1]+" "+word
 
 								if (!(temp_word in converted_dict)) {
@@ -439,17 +396,11 @@ chrome.runtime.onMessage.addListener(
 						}
 					}
 				}
-			}
-
-		    console.log("Process Complete")
-		    console.dir(wordArr)
-		    console.log("Converted dict")
-		    console.dir(converted_dict)	
+			}	
 
 			// call sendResponse to send list of units to convert
 			sendResponse({dict: converted_dict})
 			return true;
-		
+		}
 	}
 );
-
